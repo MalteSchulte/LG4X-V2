@@ -206,15 +206,9 @@ class PrettyWidget(QtWidgets.QMainWindow):
         list_col = ['peak_1']
         list_row = ['model', 'center', 'sigma', 'gamma', 'amp', 'frac', 'skew', 'q', 'kt', 'soc', 'height_ratio',
                     'gaussian_sigma', 'fct_coster_kronig', 'center_ref', 'ctr_diff', 'amp_ref', 'ratio', 'soc_ref',
-                    'soc_ratio', 'height_r_ref', 'ratio', 'g_s_ref', 'gaussian_ratio', 'lrtzn_s_ref', 'lrtzn_ratio',
-                    'ctr_min', 'ctr_max', 'sig_min', 'sig_max', 'gam_min', 'gam_max', 'amp_min', 'amp_max', 'frac_min',
-                    'frac_max', 'skew_min', 'skew_max', 'q_min', 'q_max', 'kt_min','kt_max','soc_min', 'soc_max',
-                    'height_rtio_min', 'height_rtio_max', 'gaussian_s_min','gaussian_s_max', "coster-kronig_min",
-                    "coster-kronig_max", 'ctr_diff_min', 'ctr_diff_max', 'amp_ratio_min', 'amp_ratio_max',
-                    'soc_ratio_min', 'soc_ratio_max', 'height_ref_min', 'height_ref_max', 'gaussian_ratio_min',
-                    'gaussian_ratio_max', 'lorentz_ratio_min', 'lorentz_ratio_max']
-        self.fitp1 = QtWidgets.QTableWidget(len(list_row), len(list_col) * 2)
-        list_colh = ['', 'peak_1']
+                    'soc_ratio', 'height_r_ref', 'ratio', 'g_s_ref', 'gaussian_ratio', 'lrtzn_s_ref', 'lrtzn_ratio']
+        self.fitp1 = QtWidgets.QTableWidget(len(list_row), len(list_col) * 4)
+        list_colh = ['', 'peak_1', 'min','max']
         self.fitp1.setHorizontalHeaderLabels(list_colh)
         self.fitp1.setVerticalHeaderLabels(list_row)
 
@@ -230,19 +224,19 @@ class PrettyWidget(QtWidgets.QMainWindow):
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_shape)
             # comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(0, 2 * col + 1, comboBox)
+            self.fitp1.setCellWidget(0, 4 * col + 1, comboBox)
         # set DropDown ctr_ref peak selection
         for col in range(len(list_col)):
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(13, 2 * col + 1, comboBox)
+            self.fitp1.setCellWidget(13, 4 * col + 1, comboBox)
         # set DropDown amp_ref peak selection
         for col in range(len(list_col)):
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(15, 2 * col + 1, comboBox)
+            self.fitp1.setCellWidget(15, 4 * col + 1, comboBox)
         # set DropDown soc_ref peak selection
         for col in range(len(list_col)):
             comboBox = QtWidgets.QComboBox()
@@ -254,19 +248,19 @@ class PrettyWidget(QtWidgets.QMainWindow):
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(19, 2 * col + 1, comboBox)
+            self.fitp1.setCellWidget(19, 4 * col + 1, comboBox)
         # set DropDown gaussian_sigma_ref peak selection
         for col in range(len(list_col)):
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(21, 2 * col + 1, comboBox)
+            self.fitp1.setCellWidget(21, 4 * col + 1, comboBox)
         # set Dropdown lorentzian_sigma_ref peak selection
         for col in range(len(list_col)):
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(23, 2 * col + 1, comboBox)
+            self.fitp1.setCellWidget(23, 4 * col + 1, comboBox)
         # set checkbox in fit table
         for row in range(len(list_row) - 1):
             for col in range(len(list_col)):
@@ -274,18 +268,16 @@ class PrettyWidget(QtWidgets.QMainWindow):
                 item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                 if row < 12:
                     item.setCheckState(QtCore.Qt.Checked)
-                    self.fitp1.setItem(row + 1, col * 2, item)
-                if row > 23:
+                    self.fitp1.setItem(row + 1, col * 4, item)
+                if 12 <= row and row % 2 == 1:
                     item.setCheckState(QtCore.Qt.Unchecked)
-                    self.fitp1.setItem(row + 1, col * 2, item)
-                if 12 <= row <= 23 and row % 2 == 1:
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                    self.fitp1.setItem(row + 1, col * 2, item)
+                    self.fitp1.setItem(row + 1, col * 4, item)
         # load default preset
         # pre_pk = [[0,0],[2,0],[2,0],[2,0],[2,0],[2,0],[2,0],[2,0]]
-        pre_pk = [[0, 0], [2, 284.6], [2, 0.25], [2, 0.02], [0, 20000], [2, 0.5], [2, 0], [2, 0], [2, 0.026], [2, 0.1],
-                  [2, 0.7], [2, 0.2], [2, 1], [0, 0], [2, 0.1], [0, 0], [2, 0.5], [0, 0], [2, 1], [0, 0], [2, 1],
-                  [0, 0], [2, 1], [0, 0], [2, 1]]
+        pre_pk = [[0, 0,0,0], [2, 284.6,0,0], [2, 0.25,0,0], [2, 0.02,0,0], [0, 20000,0,0], [2, 0.5,0,0], [2, 0,0,0],
+                  [2, 0,0,0], [2, 0.026,0,0], [2, 0.1,0,0], [2, 0.7,0,0], [2, 0.2,0,0], [2, 1,0,0], [0, 0,0,0],
+                  [2, 0.1,0,0], [0, 0,0,0], [2, 0.5,0,0], [0, 0,0,0], [2, 1,0,0], [0, 0,0,0], [2, 1,0,0],
+                  [0, 0,0,0], [2, 1,0,0], [0, 0,0,0], [2, 1,0,0]]
         self.setPreset(0, [], pre_pk)
 
         self.fitp1.resizeColumnsToContents()
@@ -330,6 +322,8 @@ class PrettyWidget(QtWidgets.QMainWindow):
         self.res_tab.insertColumn(colPosition_res)
         self.fitp1.insertColumn(colPosition_fitp1)
         self.fitp1.insertColumn(colPosition_fitp1 + 1)
+        self.fitp1.insertColumn(colPosition_fitp1 + 2)
+        self.fitp1.insertColumn(colPosition_fitp1 + 3)
         # add DropDown peak model
         comboBox = QtWidgets.QComboBox()
         comboBox.addItems(self.list_shape)
@@ -338,77 +332,78 @@ class PrettyWidget(QtWidgets.QMainWindow):
 
         # setup new peak parameters
         for row in range(rowPosition):
+            print(row)
             add_fac = 0
             if row == 0:
-                add_fac = float(self.fitp1.item(row + 2, colPosition_fitp1 - 1).text()) * 1
+                add_fac = float(self.fitp1.item(row + 2, colPosition_fitp1 - 3).text()) * 1
             if row == 3:
-                add_fac = -1 * float(self.fitp1.item(row + 1, colPosition_fitp1 - 1).text()) / 2
-            if self.fitp1.item(row + 1, colPosition_fitp1 - 1) is not None \
+                add_fac = -1 * float(self.fitp1.item(row + 1, colPosition_fitp1 - 3).text()) / 2
+            if self.fitp1.item(row + 1, colPosition_fitp1 - 3) is not None \
                     and row != 12 and row != 14 and row != 16 \
                     and row != 18 and row != 20 and row != 22:
-                if len(self.fitp1.item(row + 1, colPosition_fitp1 - 1).text()) > 0:
+                if len(self.fitp1.item(row + 1, colPosition_fitp1 - 3).text()) > 0:
                     item = QtWidgets.QTableWidgetItem(
-                        str(format(float(self.fitp1.item(row + 1, colPosition_fitp1 - 1).text()) + add_fac,
+                        str(format(float(self.fitp1.item(row + 1, colPosition_fitp1 - 3).text()) + add_fac,
                                    self.floating)))
                     self.fitp1.setItem(row + 1, colPosition_fitp1 + 1, item)
 
         # add DropDown peak selection for amp_ref and ctr_ref and keep values as it is 
-        self.list_peak.append(str(int(1 + colPosition_fitp1 / 2)))
+        self.list_peak.append(str(int(1 + colPosition_fitp1 / 4)))
 
-        for col in range(int(colPosition_fitp1 / 2) + 1):
-            if col < int(colPosition_fitp1 / 2):
-                index = self.fitp1.cellWidget(13, 2 * col + 1).currentIndex()
+        for col in range(int(colPosition_fitp1 / 4) + 1):
+            if col < int(colPosition_fitp1 / 4):
+                index = self.fitp1.cellWidget(13, 4 * col + 1).currentIndex()
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(13, 2 * col + 1, comboBox)
-            if index > 0 and col < int(colPosition_fitp1 / 2):
+            self.fitp1.setCellWidget(13, 4 * col + 1, comboBox)
+            if index > 0 and col < int(colPosition_fitp1 / 4):
                 comboBox.setCurrentIndex(index)
 
-        for col in range(int(colPosition_fitp1 / 2) + 1):
-            if col < int(colPosition_fitp1 / 2):
-                index = self.fitp1.cellWidget(15, 2 * col + 1).currentIndex()
+        for col in range(int(colPosition_fitp1 / 4) + 1):
+            if col < int(colPosition_fitp1 / 4):
+                index = self.fitp1.cellWidget(15, 4 * col + 1).currentIndex()
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(15, 2 * col + 1, comboBox)
-            if index > 0 and col < int(colPosition_fitp1 / 2):
+            self.fitp1.setCellWidget(15, 4 * col + 1, comboBox)
+            if index > 0 and col < int(colPosition_fitp1 / 4):
                 comboBox.setCurrentIndex(index)
-        for col in range(int(colPosition_fitp1 / 2) + 1):
-            if col < int(colPosition_fitp1 / 2):
-                index = self.fitp1.cellWidget(17, 2 * col + 1).currentIndex()
+        for col in range(int(colPosition_fitp1 / 4) + 1):
+            if col < int(colPosition_fitp1 / 4):
+                index = self.fitp1.cellWidget(17, 4 * col + 1).currentIndex()
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(17, 2 * col + 1, comboBox)
-            if index > 0 and col < int(colPosition_fitp1 / 2):
+            self.fitp1.setCellWidget(17, 4 * col + 1, comboBox)
+            if index > 0 and col < int(colPosition_fitp1 / 4):
                 comboBox.setCurrentIndex(index)
-        for col in range(int(colPosition_fitp1 / 2) + 1):
-            if col < int(colPosition_fitp1 / 2):
-                index = self.fitp1.cellWidget(19, 2 * col + 1).currentIndex()
+        for col in range(int(colPosition_fitp1 / 4) + 1):
+            if col < int(colPosition_fitp1 / 4):
+                index = self.fitp1.cellWidget(19, 4 * col + 1).currentIndex()
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(19, 2 * col + 1, comboBox)
-            if index > 0 and col < int(colPosition_fitp1 / 2):
+            self.fitp1.setCellWidget(19, 4 * col + 1, comboBox)
+            if index > 0 and col < int(colPosition_fitp1 / 4):
                 comboBox.setCurrentIndex(index)
-        for col in range(int(colPosition_fitp1 / 2) + 1):
-            if col < int(colPosition_fitp1 / 2):
-                index = self.fitp1.cellWidget(21, 2 * col + 1).currentIndex()
+        for col in range(int(colPosition_fitp1 / 4) + 1):
+            if col < int(colPosition_fitp1 / 4):
+                index = self.fitp1.cellWidget(21, 4 * col + 1).currentIndex()
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(21, 2 * col + 1, comboBox)
-            if index > 0 and col < int(colPosition_fitp1 / 2):
+            self.fitp1.setCellWidget(21, 4 * col + 1, comboBox)
+            if index > 0 and col < int(colPosition_fitp1 / 4):
                 comboBox.setCurrentIndex(index)
-        for col in range(int(colPosition_fitp1 / 2) + 1):
-            if col < int(colPosition_fitp1 / 2):
-                index = self.fitp1.cellWidget(23, 2 * col + 1).currentIndex()
+        for col in range(int(colPosition_fitp1 / 4) + 1):
+            if col < int(colPosition_fitp1 / 4):
+                index = self.fitp1.cellWidget(23, 4 * col + 1).currentIndex()
             comboBox = QtWidgets.QComboBox()
             comboBox.addItems(self.list_peak)
             comboBox.setMaximumWidth(55)
-            self.fitp1.setCellWidget(23, 2 * col + 1, comboBox)
-            if index > 0 and col < int(colPosition_fitp1 / 2):
+            self.fitp1.setCellWidget(23, 4 * col + 1, comboBox)
+            if index > 0 and col < int(colPosition_fitp1 / 4):
                 comboBox.setCurrentIndex(index)
         # add checkbox
         for row in range(rowPosition - 1):
@@ -416,20 +411,13 @@ class PrettyWidget(QtWidgets.QMainWindow):
             item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
             if row < 12:
                 # item.setCheckState(QtCore.Qt.Checked)
-                if self.fitp1.item(row + 1, colPosition_fitp1 - 2).checkState() == 2:
+                if self.fitp1.item(row + 1, colPosition_fitp1 - 4).checkState() == 2:
                     item.setCheckState(QtCore.Qt.Checked)
                 else:
                     item.setCheckState(QtCore.Qt.Unchecked)
                 self.fitp1.setItem(row + 1, colPosition_fitp1, item)
-            if row >= 24:
-                # item.setCheckState(QtCore.Qt.Unchecked)
-                if self.fitp1.item(row + 1, colPosition_fitp1 - 2).checkState() == 2:
-                    item.setCheckState(QtCore.Qt.Checked)
-                else:
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                self.fitp1.setItem(row + 1, colPosition_fitp1, item)
-            if 12 < row <= 23 and row % 2 == 1:
-                if self.fitp1.item(row + 1, colPosition_fitp1 - 2).checkState() == 2:
+            if 12 < row and row % 4 == 1:
+                if self.fitp1.item(row + 1, colPosition_fitp1 - 4).checkState() == 2:
                     item.setCheckState(QtCore.Qt.Checked)
                 else:
                     item.setCheckState(QtCore.Qt.Unchecked)
@@ -437,8 +425,12 @@ class PrettyWidget(QtWidgets.QMainWindow):
         # add table header
         item = QtWidgets.QTableWidgetItem()
         self.fitp1.setHorizontalHeaderItem(colPosition_fitp1, item)
-        item = QtWidgets.QTableWidgetItem('peak_' + str(int(1 + colPosition_fitp1 / 2)))
+        item = QtWidgets.QTableWidgetItem('peak_' + str(int(1 + colPosition_fitp1 / 4)))
         self.fitp1.setHorizontalHeaderItem(colPosition_fitp1 + 1, item)
+        item = QtWidgets.QTableWidgetItem('min')
+        self.fitp1.setHorizontalHeaderItem(colPosition_fitp1 + 2, item)
+        item = QtWidgets.QTableWidgetItem('max')
+        self.fitp1.setHorizontalHeaderItem(colPosition_fitp1 + 3, item)
         self.fitp1.resizeColumnsToContents()
         item = QtWidgets.QTableWidgetItem('peak_' + str(int(1 + colPosition_res)))
         self.res_tab.setHorizontalHeaderItem(colPosition_res, item)
@@ -451,58 +443,60 @@ class PrettyWidget(QtWidgets.QMainWindow):
         colPosition_res = self.res_tab.columnCount()
         if colPosition_res > 1:
             self.res_tab.removeColumn(colPosition_res - 1)
-        if colPosition > 2:
+        if colPosition > 4:
             self.fitp1.removeColumn(colPosition - 1)
             self.fitp1.removeColumn(colPosition - 2)
-            self.list_peak.remove(str(int(colPosition / 2)))
+            self.fitp1.removeColumn(colPosition - 3)
+            self.fitp1.removeColumn(colPosition - 4)
+            self.list_peak.remove(str(int(colPosition / 4)))
             # remove peak in dropdown menu and keep values as it is
-            for col in range(int(colPosition / 2)):
-                if col < int(colPosition / 2) - 1:
-                    index = self.fitp1.cellWidget(13, 2 * col + 1).currentIndex()
+            for col in range(int(colPosition / 4)):
+                if col < int(colPosition / 4) - 1:
+                    index = self.fitp1.cellWidget(13, 4 * col + 1).currentIndex()
                 comboBox = QtWidgets.QComboBox()
                 comboBox.addItems(self.list_peak)
-                self.fitp1.setCellWidget(13, 2 * col + 1, comboBox)
+                self.fitp1.setCellWidget(13, 4 * col + 1, comboBox)
                 if index > 0:
                     comboBox.setCurrentIndex(index)
 
-            for col in range(int(colPosition / 2)):
-                if col < int(colPosition / 2) - 1:
-                    index = self.fitp1.cellWidget(15, 2 * col + 1).currentIndex()
+            for col in range(int(colPosition / 4)):
+                if col < int(colPosition / 4) - 1:
+                    index = self.fitp1.cellWidget(15, 4 * col + 1).currentIndex()
                 comboBox = QtWidgets.QComboBox()
                 comboBox.addItems(self.list_peak)
-                self.fitp1.setCellWidget(15, 2 * col + 1, comboBox)
+                self.fitp1.setCellWidget(15, 4 * col + 1, comboBox)
                 if index > 0:
                     comboBox.setCurrentIndex(index)
-            for col in range(int(colPosition / 2)):
-                if col < int(colPosition / 2) - 1:
-                    index = self.fitp1.cellWidget(17, 2 * col + 1).currentIndex()
+            for col in range(int(colPosition / 4)):
+                if col < int(colPosition / 4) - 1:
+                    index = self.fitp1.cellWidget(17, 4 * col + 1).currentIndex()
                 comboBox = QtWidgets.QComboBox()
                 comboBox.addItems(self.list_peak)
-                self.fitp1.setCellWidget(17, 2 * col + 1, comboBox)
+                self.fitp1.setCellWidget(17, 4 * col + 1, comboBox)
                 if index > 0:
                     comboBox.setCurrentIndex(index)
-            for col in range(int(colPosition / 2)):
-                if col < int(colPosition / 2) - 1:
-                    index = self.fitp1.cellWidget(19, 2 * col + 1).currentIndex()
+            for col in range(int(colPosition / 4)):
+                if col < int(colPosition / 4) - 1:
+                    index = self.fitp1.cellWidget(19, 4 * col + 1).currentIndex()
                 comboBox = QtWidgets.QComboBox()
                 comboBox.addItems(self.list_peak)
-                self.fitp1.setCellWidget(19, 2 * col + 1, comboBox)
+                self.fitp1.setCellWidget(19, 4 * col + 1, comboBox)
                 if index > 0:
                     comboBox.setCurrentIndex(index)
-            for col in range(int(colPosition / 2)):
-                if col < int(colPosition / 2) - 1:
-                    index = self.fitp1.cellWidget(21, 2 * col + 1).currentIndex()
+            for col in range(int(colPosition / 4)):
+                if col < int(colPosition / 4) - 1:
+                    index = self.fitp1.cellWidget(21, 4 * col + 1).currentIndex()
                 comboBox = QtWidgets.QComboBox()
                 comboBox.addItems(self.list_peak)
-                self.fitp1.setCellWidget(21, 2 * col + 1, comboBox)
+                self.fitp1.setCellWidget(21, 4 * col + 1, comboBox)
                 if index > 0:
                     comboBox.setCurrentIndex(index)
-            for col in range(int(colPosition / 2)):
-                if col < int(colPosition / 2) - 1:
-                    index = self.fitp1.cellWidget(23, 2 * col + 1).currentIndex()
+            for col in range(int(colPosition / 4)):
+                if col < int(colPosition / 4) - 1:
+                    index = self.fitp1.cellWidget(23, 4 * col + 1).currentIndex()
                 comboBox = QtWidgets.QComboBox()
                 comboBox.addItems(self.list_peak)
-                self.fitp1.setCellWidget(23, 2 * col + 1, comboBox)
+                self.fitp1.setCellWidget(23, 4 * col + 1, comboBox)
                 if index > 0:
                     comboBox.setCurrentIndex(index)
 
@@ -511,8 +505,8 @@ class PrettyWidget(QtWidgets.QMainWindow):
         colPosition = self.fitp1.columnCount()
 
         if index == 1:
-            if colPosition > 2:
-                for col in range(int(colPosition / 2) - 1):
+            if colPosition > 4:
+                for col in range(int(colPosition / 4) - 1):
                     self.rem_col()
             # load default preset
             if self.comboBox_file.currentIndex() > 0:
@@ -624,22 +618,22 @@ class PrettyWidget(QtWidgets.QMainWindow):
         # load preset for peaks
         # adjust npeak before load
         if len(list_pre_pk) != 0:
-            colPosition = int(self.fitp1.columnCount() / 2)
+            colPosition = int(self.fitp1.columnCount() / 4)
             if self.addition == 0:
                 # print(int(colPosition), int(len(list_pre_pk[0])/2), list_pre_pk[0])
-                if colPosition > int(len(list_pre_pk[0]) / 2):
-                    for col in range(colPosition - int(len(list_pre_pk[0]) / 2)):
+                if colPosition > int(len(list_pre_pk[0]) / 4):
+                    for col in range(colPosition - int(len(list_pre_pk[0]) / 4)):
                         self.rem_col()
-                if colPosition < int(len(list_pre_pk[0]) / 2):
-                    for col in range(int(len(list_pre_pk[0]) / 2) - colPosition):
+                if colPosition < int(len(list_pre_pk[0]) / 4):
+                    for col in range(int(len(list_pre_pk[0]) / 4) - colPosition):
                         self.add_col()
             else:
-                for col in range(int(len(list_pre_pk[0]) / 2)):
+                for col in range(int(len(list_pre_pk[0]) / 4)):
                     self.add_col()
 
         for row in range(len(list_pre_pk)):
             for col in range(len(list_pre_pk[0])):
-                if (col % 2) != 0:
+                if (col % 4) == 1:
                     if row == 0 or row == 13 or row == 15 or row == 17 or row == 19 or row == 21 or row == 23:
 
                         comboBox = QtWidgets.QComboBox()
@@ -651,7 +645,7 @@ class PrettyWidget(QtWidgets.QMainWindow):
                             self.fitp1.setCellWidget(row, col, comboBox)
                             comboBox.setCurrentIndex(list_pre_pk[row][col])
                         else:
-                            self.fitp1.setCellWidget(row, col + colPosition * 2, comboBox)
+                            self.fitp1.setCellWidget(row, col + colPosition * 4, comboBox)
                             if list_pre_pk[row][col] != 0:
                                 comboBox.setCurrentIndex(list_pre_pk[row][col] + colPosition)
                             else:
@@ -664,8 +658,8 @@ class PrettyWidget(QtWidgets.QMainWindow):
                         if self.addition == 0:
                             self.fitp1.setItem(row, col, item)
                         else:
-                            self.fitp1.setItem(row, col + colPosition * 2, item)
-                else:
+                            self.fitp1.setItem(row, col + colPosition * 4, item)
+                elif (col%4)==0:
                     if row != 0 and row != 13 and row != 15 and row != 17 and row != 19 and row != 21 and row != 23:
                         item = QtWidgets.QTableWidgetItem()
                         if list_pre_pk[row][col] == 2:
@@ -675,7 +669,7 @@ class PrettyWidget(QtWidgets.QMainWindow):
                         if self.addition == 0:
                             self.fitp1.setItem(row, col, item)
                         else:
-                            self.fitp1.setItem(row, col + colPosition * 2, item)
+                            self.fitp1.setItem(row, col + colPosition * 4, item)
 
     def loadPreset(self):
         cfilePath, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open data file', self.filePath, "DAT Files (*.dat)")
@@ -2120,3 +2114,4 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     w = PrettyWidget()
     sys.exit(app.exec_())
+
